@@ -9,11 +9,12 @@ namespace SpeciallyWeightless;
 [Injectable(TypePriority = OnLoadOrder.TraderRegistration - 1), UsedImplicitly]
 public class SpeciallyWeightless(DatabaseServer databaseServer) : IOnLoad
 {
-    private MongoId _specItemParent = new("5447e0e74bdc2d3c308b4567");
+    private static readonly MongoId _specItemParent = new("5447e0e74bdc2d3c308b4567");
     
     public Task OnLoad()
     {
         var itemsDb = databaseServer.GetTables().Templates.Items;
+        
         foreach (var item in itemsDb.Where(item => item.Value.Parent == _specItemParent))
         {
             var tpl = item.Value;
