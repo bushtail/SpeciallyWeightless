@@ -1,4 +1,4 @@
-﻿﻿name: Build and Release SPT Mod
+name: Build and Release SPT Mod
 
 on:
   push:
