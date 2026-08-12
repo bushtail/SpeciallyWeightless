@@ -2,23 +2,23 @@
 using SPTarkov.DI.Annotations;
 using SPTarkov.Server.Core.DI;
 using SPTarkov.Server.Core.Models.Common;
-using SPTarkov.Server.Core.Servers;
+using SPTarkov.Server.Core.Models.Spt.Tables;
 
 namespace SpeciallyWeightless;
 
 [Injectable(TypePriority = OnLoadOrder.TraderRegistration - 1), UsedImplicitly]
-public class SpeciallyWeightless(DatabaseServer databaseServer) : IOnLoad
+public class SpeciallyWeightless(TemplateTable templateTable) : IOnLoad
 {
-    private static readonly MongoId _specItemParent = new("5447e0e74bdc2d3c308b4567");
+    private static readonly MongoId SpecItemParent = new("5447e0e74bdc2d3c308b4567");
     
-    public Task OnLoad()
+    public Task OnLoadAsync(CancellationToken token)
     {
-        var itemsDb = databaseServer.GetTables().Templates.Items;
+        var itemsDb = templateTable.Items;
         
-        foreach (var item in itemsDb.Where(item => item.Value.Parent == _specItemParent))
+        foreach (var item in itemsDb.Where(item => item.Value.Parent == SpecItemParent))
         {
             var tpl = item.Value;
-            if (tpl.Properties != null && tpl.Properties.Weight != null)
+            if (tpl.Properties is { Weight: not null })
             {
                 tpl.Properties.Weight = 0.0;
             }
